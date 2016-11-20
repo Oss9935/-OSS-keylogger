@@ -34,7 +34,7 @@ int main()
 		memset(buf, '\0', BUF_SIZE);
 		while(fgets(buf, BUF_SIZE, fp))
 			puts(buf);
-			// puts -> send
+			//Todo : puts -> send
 
 	printf("\n\n\nfile size is = %d\n", fileSize);
 
