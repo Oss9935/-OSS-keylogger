@@ -7,23 +7,27 @@
 #include <sys/socket.h>
 #include <malloc.h>
 
-#define GRT_LOG 100
+#define GET_LOG 100
 #define SEND_LOG 101
 #define FAIL_SEND 102
 #define EXIT_CMD 900
-#define EXIT_PRC 901
-#define MAX 32
+#define EXIT_PROCESS 901
+#define MAX 1024
 
 void error_handling(char *message);
 
-char input[MAX]; // string that will send to server
+
+char test[MAX];
 
 int main(int argc, char *argv[])
 {
 	int sock;
 	struct sockaddr_in serv_addr;
-	char message[MAX]; // array that will store string from server 
+	char message[MAX];
 	int str_len;
+	int i = 0;
+
+
 
 	if (argc != 3) {
 		printf("Usage : %s <IP> <port>\n", argv[0]);
@@ -42,18 +46,25 @@ int main(int argc, char *argv[])
 	if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1) /* 서버로 연결 요청 */
 		error_handling("connect() error!");
 
- 	scanf("%s", input);
-	input[strlen(input)] = '\0';
-	write(sock, input , strlen(input)+1); // send input string to server
+	for (;;)
+	{
+		printf("Input the CMD : ");
+		scanf("%s", test); // input the string
+		test[strlen(test)] = '\0';
+		if (strcmp(test, "END") == 0)
+			break;
+		write(sock, test, strlen(test) + 1); // send the string to server
 
 
-	str_len = read(sock, message, sizeof(message) - 1); /* 데이터 수신 */
-	if (str_len == -1)
-		error_handling("read() error!");
+		str_len = read(sock, message, sizeof(message) - 1); /* 데이터 수신 */
+		if (str_len == -1)
+			error_handling("read() error!");
 
-	message[str_len] = '\0';
-	printf("Message from server : %s\n", message); // print msg from server
+		message[str_len] = '\0';
+		printf("Message from server : %s\n", message);
 
+
+	}
 	close(sock); /* 연결 종료 */
 
 	return 0;
