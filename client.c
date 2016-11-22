@@ -17,7 +17,7 @@
 void error_handling(char *message);
 
 
-char test[MAX];
+char cmd[MAX];
 
 int main(int argc, char *argv[])
 {
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	sock = socket(PF_INET, SOCK_STREAM, 0);  /* Create client socket to listen server */
+	sock = socket(PF_INET, SOCK_STREAM, 0);  /* 서버 접속을 위한 클라이언트 소켓 생성 */
 	if (sock == -1)
 		error_handling("socket() error");
 
@@ -43,29 +43,46 @@ int main(int argc, char *argv[])
 	serv_addr.sin_addr.s_addr = inet_addr(argv[1]);
 	serv_addr.sin_port = htons(atoi(argv[2]));
 
-	if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1) /* Request listen to server */
+	if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1) /* 서버로 연결 요청 */
 		error_handling("connect() error!");
 
-	for (;;)
+	for (;;) // cmd loop
 	{
-		printf("Input the CMD : ");
-		scanf("%s", test); // input the string
-		test[strlen(test)] = '\0';
-		if (strcmp(test, "END") == 0)
+		printf("\nInput the CMD>>");
+		scanf("%s", cmd); // input the CMD
+		cmd[strlen(cmd)] = '\0';
+		write(sock, cmd, strlen(cmd) + 1);
+
+		if (strcmp(cmd, "GET") == 0)
+		{
+			memset(cmd, '\0', sizeof(cmd));
+			printf("Message from server>>\n");
+
+			for (;;) {
+				memset(message, '\0', sizeof(message)); // memory set	
+				str_len = read(sock, message, sizeof(message) - 1); /* 데이터 수신 */
+
+				if (str_len == -1)
+					error_handling("read() error!"); // manage error
+
+				message[str_len] = '\0';
+				printf("<%s>", message);
+				if (strcmp(message, "OK") == 0)
+				{
+					write(sock, "SEND", 5);
+					memset(message, '\0', sizeof(message));
+					read(sock, message, sizeof(message) - 1);
+					if (strcmp(message, "EOF") == 0)
+						break;
+					printf("%s", message);
+				}
+			}
+		}
+		else if (strcmp(cmd, "END") == 0)
 			break;
-		write(sock, test, strlen(test) + 1); // send the string to server
-
-
-		str_len = read(sock, message, sizeof(message) - 1); /* receive data */
-		if (str_len == -1)
-			error_handling("read() error!");
-
-		message[str_len] = '\0';
-		printf("Message from server : %s\n", message);
-
 
 	}
-	close(sock); /* close socket */
+	close(sock); /* 연결 종료 */
 
 	return 0;
 }
