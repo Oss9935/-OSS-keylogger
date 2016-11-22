@@ -26,10 +26,10 @@ int main(int argc, char *argv[])
 	struct sockaddr_in clnt_addr;
 	int clnt_addr_size;
 	char message[] = "Hello!";
-
+	char resp[MAX];
 
 	FILE *fp;
-	fp = fopen("test_log", "r");
+
 
 	char file[MAX]; // string from fopen
 	char readmsg[MAX];
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	server_sock = socket(PF_INET, SOCK_STREAM, 0); /* Create the socket */
+	server_sock = socket(PF_INET, SOCK_STREAM, 0); /* 서버 소켓 생성 */
 	if (server_sock == -1)
 		error_handling("socket() error");
 
@@ -52,16 +52,16 @@ int main(int argc, char *argv[])
 	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serv_addr.sin_port = htons(atoi(argv[1]));
 
-	if (bind(server_sock, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) == -1) /* Allocate Address */
+	if (bind(server_sock, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) == -1) /* 소켓에 주소 할당 */
 		error_handling("bind() error");
 
-	if (listen(server_sock, 5) == -1)  /* Enter the status that wait listen request */
+	if (listen(server_sock, 5) == -1)  /* 연결 요청 대기 상태로 진입 */
 		error_handling("listen() error");
 
 	for (;;) {
 
 		clnt_addr_size = sizeof(clnt_addr);
-		client_sock = accept(server_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size); /* Accept request to listen */
+		client_sock = accept(server_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size); /* 연결 요청 수락 */
 
 		if (client_sock == -1)
 			error_handling("accept() error");
@@ -84,29 +84,34 @@ int main(int argc, char *argv[])
 			readmsg[len] = '\0';
 			if (strcmp(readmsg, "GET") == 0)
 			{
-				fgets(file, sizeof(file), fp);
-				split = strtok(file, "\n");
-				n = strlen(split);
-				printf("<%s>\n", split);
-				write(client_sock, split, n);
-				memset(readmsg, '\0', sizeof(readmsg));
+				printf("\nSend Message>>\n");
+				fp = fopen("test_log", "r"); // file open
+				while (!feof(fp)) // To EOF fp
+				{
+					write(client_sock, "OK", 3); // send msg
+					read(client_sock, resp, sizeof(resp) - 1); // read respone
+					if (strcmp(resp, "SEND") == 0)
+					{
+
+						fgets(file, MAX, fp);
+						split = file;
+						if (strlen(split) == 0)
+							write(client_sock, "EOF", 4);
+						printf("<%s>\n", file);
+						write(client_sock, file, strlen(file) + 1);
+						memset(file, '\0', sizeof(file));
+					}
+				}
+
+				fclose(fp);
 			}
-			else if (strcmp(readmsg, "EXIT") == 0)
-			{
-				write(client_sock, "EXIT PRC", 8);
-				memset(readmsg, '\0', sizeof(readmsg));
-			}
-			else
-			{
-				close(client_sock);
-				break;
-			}
+
 		}
-		// write(client_sock, test, strlen(test)); /* Transfer the Data */  
-		// printf("Message in server : %s \n", test); 
-		// close(client_sock); /* Close the socket */
+		close(client_sock);
+
+		// close(client_sock); /* 연결 종료 */
 	}
-	fclose(fp);
+
 	//return 0;
 
 
