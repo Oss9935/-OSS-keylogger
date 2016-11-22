@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	sock = socket(PF_INET, SOCK_STREAM, 0);  /* 서버 접속을 위한 클라이언트 소켓 생성 */
+	sock = socket(PF_INET, SOCK_STREAM, 0);  /* Create client socket to listen server */
 	if (sock == -1)
 		error_handling("socket() error");
 
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 	serv_addr.sin_addr.s_addr = inet_addr(argv[1]);
 	serv_addr.sin_port = htons(atoi(argv[2]));
 
-	if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1) /* 서버로 연결 요청 */
+	if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1) /* Request listen to server */
 		error_handling("connect() error!");
 
 	for (;;)
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 		write(sock, test, strlen(test) + 1); // send the string to server
 
 
-		str_len = read(sock, message, sizeof(message) - 1); /* 데이터 수신 */
+		str_len = read(sock, message, sizeof(message) - 1); /* receive data */
 		if (str_len == -1)
 			error_handling("read() error!");
 
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 
 
 	}
-	close(sock); /* 연결 종료 */
+	close(sock); /* close socket */
 
 	return 0;
 }
