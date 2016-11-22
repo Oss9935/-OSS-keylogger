@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	server_sock = socket(PF_INET, SOCK_STREAM, 0); /* 서버 소켓 생성 */
+	server_sock = socket(PF_INET, SOCK_STREAM, 0); /* Create the socket */
 	if (server_sock == -1)
 		error_handling("socket() error");
 
@@ -52,16 +52,16 @@ int main(int argc, char *argv[])
 	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serv_addr.sin_port = htons(atoi(argv[1]));
 
-	if (bind(server_sock, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) == -1) /* 소켓에 주소 할당 */
+	if (bind(server_sock, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) == -1) /* Allocate Address */
 		error_handling("bind() error");
 
-	if (listen(server_sock, 5) == -1)  /* 연결 요청 대기 상태로 진입 */
+	if (listen(server_sock, 5) == -1)  /* Enter the status that wait listen request */
 		error_handling("listen() error");
 
 	for (;;) {
 
 		clnt_addr_size = sizeof(clnt_addr);
-		client_sock = accept(server_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size); /* 연결 요청 수락 */
+		client_sock = accept(server_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size); /* Accept request to listen */
 
 		if (client_sock == -1)
 			error_handling("accept() error");
@@ -102,9 +102,9 @@ int main(int argc, char *argv[])
 				break;
 			}
 		}
-		// write(client_sock, test, strlen(test)); /* 데이터 전송 */  
+		// write(client_sock, test, strlen(test)); /* Transfer the Data */  
 		// printf("Message in server : %s \n", test); 
-		// close(client_sock); /* 연결 종료 */
+		// close(client_sock); /* Close the socket */
 	}
 	fclose(fp);
 	//return 0;
