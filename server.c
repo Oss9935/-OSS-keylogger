@@ -6,20 +6,37 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
+#define GET_LOG 100
+#define SEND_LOG 101
+#define FAIL_SEND 102
+#define EXIT_CMD 900
+#define EXIT_PROCESS 901
+#define MAX 1024
 
 
 void error_handling(char *message);
 
-int main(int argc, char *argv[])
 
+
+int main(int argc, char *argv[])
 {
 	int server_sock;
 	int client_sock;
 	struct sockaddr_in serv_addr;
 	struct sockaddr_in clnt_addr;
 	int clnt_addr_size;
-	char message[] = "Hello!\n";
+	char message[] = "Hello!";
+	char resp[MAX];
 
+	FILE *fp;
+
+
+	char file[MAX]; // string from fopen
+	char readmsg[MAX];
+	char *tmp;
+	char *split;
+	int len;
+	int n, i = 0;
 
 	if (argc != 2) {
 		printf("Usage : %s <port>\n", argv[0]);
@@ -49,11 +66,53 @@ int main(int argc, char *argv[])
 		if (client_sock == -1)
 			error_handling("accept() error");
 
-		write(client_sock, message, sizeof(message)); /* 데이터 전송 */
-		printf("Message in server : %s \n", message);
-		close(client_sock); /* 연결 종료 */
+		for (;;) {
+			len = 0;
+			tmp = readmsg;
+			while ((n = read(client_sock, tmp, 1))>0) // input by client
+			{
+				if (*tmp == '\r') continue;
+				if (*tmp == '\0') break;
+				if (*tmp == '\n') break;
+
+				if (len == MAX) break;
+
+				tmp++;
+				len++;
+			}
+
+			readmsg[len] = '\0';
+			if (strcmp(readmsg, "GET") == 0)
+			{
+				printf("\nSend Message>>\n");
+				fp = fopen("test_log", "r"); // file open
+				while (!feof(fp)) // To EOF fp
+				{
+					write(client_sock, "OK", 3); // send msg
+					read(client_sock, resp, sizeof(resp) - 1); // read respone
+					if (strcmp(resp, "SEND") == 0)
+					{
+
+						fgets(file, MAX, fp);
+						split = file;
+						if (strlen(split) == 0)
+							write(client_sock, "EOF", 4);
+						printf("<%s>\n", file);
+						write(client_sock, file, strlen(file) + 1);
+						memset(file, '\0', sizeof(file));
+					}
+				}
+
+				fclose(fp);
+			}
+
+		}
+		close(client_sock);
+
+		// close(client_sock); /* 연결 종료 */
 	}
-	return 0;
+
+	//return 0;
 
 
 }
