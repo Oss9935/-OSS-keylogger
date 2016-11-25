@@ -54,7 +54,8 @@ int main(int argc, char *argv[])
 
 	if (bind(server_sock, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) == -1) /* 소켓에 주소 할당 */
 		error_handling("bind() error");
-
+	for(;;)
+	{
 	if (listen(server_sock, 5) == -1)  /* 연결 요청 대기 상태로 진입 */
 		error_handling("listen() error");
 
@@ -66,10 +67,11 @@ int main(int argc, char *argv[])
 		if (client_sock == -1)
 			error_handling("accept() error");
 
-		for (;;) {
+		for (;;) // execute CMD
+		{
 			len = 0;
 			tmp = readmsg;
-			while ((n = read(client_sock, tmp, 1))>0) // input by client
+			while ((n = read(client_sock, tmp, 1))>0) // Get the CMD
 			{
 				if (*tmp == '\r') continue;
 				if (*tmp == '\0') break;
@@ -104,10 +106,13 @@ int main(int argc, char *argv[])
 				}
 				fclose(fp);
 			}
+			else if(strcmp(readmsg, "END")==0)
+				break;
 
 		}
 		close(client_sock);
-return 0;
+	}
+		//return 0;
 }
 
 
