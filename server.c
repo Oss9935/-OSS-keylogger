@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	server_sock = socket(PF_INET, SOCK_STREAM, 0); /* ¼­¹ö ¼ÒÄÏ »ı¼º */
+	server_sock = socket(PF_INET, SOCK_STREAM, 0); /* ì„œë²„ ì†Œì¼“ ìƒì„± */
 	if (server_sock == -1)
 		error_handling("socket() error");
 
@@ -52,16 +52,16 @@ int main(int argc, char *argv[])
 	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serv_addr.sin_port = htons(atoi(argv[1]));
 
-	if (bind(server_sock, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) == -1) /* ¼ÒÄÏ¿¡ ÁÖ¼Ò ÇÒ´ç */
+	if (bind(server_sock, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) == -1) /* ì†Œì¼“ì— ì£¼ì†Œ í• ë‹¹ */
 		error_handling("bind() error");
 
-	if (listen(server_sock, 5) == -1)  /* ¿¬°á ¿äÃ» ´ë±â »óÅÂ·Î ÁøÀÔ */
+	if (listen(server_sock, 5) == -1)  /* ì—°ê²° ìš”ì²­ ëŒ€ê¸° ìƒíƒœë¡œ ì§„ì… */
 		error_handling("listen() error");
 
 	for (;;) {
 
 		clnt_addr_size = sizeof(clnt_addr);
-		client_sock = accept(server_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size); /* ¿¬°á ¿äÃ» ¼ö¶ô */
+		client_sock = accept(server_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size); /* ì—°ê²° ìš”ì²­ ìˆ˜ë½ */
 
 		if (client_sock == -1)
 			error_handling("accept() error");
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 						split = file;
 						if (strlen(split) == 0)
 							write(client_sock, "EOF", 4);
-						printf("<%s>\n", file);
+						//printf("<%s>\n", file);
 						write(client_sock, file, strlen(file) + 1);
 						memset(file, '\0', sizeof(file));
 					}
@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 		}
 		close(client_sock);
 
-		// close(client_sock); /* ¿¬°á Á¾·á */
+		
 	}
 
 	//return 0;
