@@ -26,6 +26,8 @@ int main(int argc, char *argv[])
 	char message[MAX];
 	int str_len;
 	int i = 0;
+	FILE *recv; // store the receive file
+	
 
 
 
@@ -34,7 +36,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	sock = socket(PF_INET, SOCK_STREAM, 0);  /* ¼­¹ö Á¢¼ÓÀ» À§ÇÑ Å¬¶óÀÌ¾ğÆ® ¼ÒÄÏ »ı¼º */
+	sock = socket(PF_INET, SOCK_STREAM, 0);  /* ì„œë²„ ì ‘ì†ì„ ìœ„í•œ í´ë¼ì´ì–¸íŠ¸ ì†Œì¼“ ìƒì„± */
 	if (sock == -1)
 		error_handling("socket() error");
 
@@ -43,11 +45,12 @@ int main(int argc, char *argv[])
 	serv_addr.sin_addr.s_addr = inet_addr(argv[1]);
 	serv_addr.sin_port = htons(atoi(argv[2]));
 
-	if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1) /* ¼­¹ö·Î ¿¬°á ¿äÃ» */
+	if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1) /* ì„œë²„ë¡œ ì—°ê²° ìš”ì²­ */
 		error_handling("connect() error!");
 
 	for (;;) // cmd loop
 	{
+		printf("===================");	
 		printf("\nInput the CMD>>");
 		scanf("%s", cmd); // input the CMD
 		cmd[strlen(cmd)] = '\0';
@@ -55,18 +58,20 @@ int main(int argc, char *argv[])
 
 		if (strcmp(cmd, "GET") == 0)
 		{
+			recv = fopen("receive file.txt", "w+"); // changed 161125		
 			memset(cmd, '\0', sizeof(cmd));
+			printf("======================\n");
 			printf("Message from server>>\n");
-
+			printf("======================\n");
 			for (;;) {
 				memset(message, '\0', sizeof(message)); // memory set	
-				str_len = read(sock, message, sizeof(message) - 1); /* µ¥ÀÌÅÍ ¼ö½Å */
+				str_len = read(sock, message, sizeof(message) - 1); /* ë°ì´í„° ìˆ˜ì‹  */
 
 				if (str_len == -1)
 					error_handling("read() error!"); // manage error
 
 				message[str_len] = '\0';
-				printf("<%s>", message);
+				//printf("<%s>", message); // <OK> message
 				if (strcmp(message, "OK") == 0)
 				{
 					write(sock, "SEND", 5);
@@ -75,14 +80,17 @@ int main(int argc, char *argv[])
 					if (strcmp(message, "EOF") == 0)
 						break;
 					printf("%s", message);
+					fwrite(message,strlen(message),1, recv); // changed 161125
 				}
 			}
+			fclose(recv); // changed 161125
 		}
 		else if (strcmp(cmd, "END") == 0)
 			break;
 
 	}
-	close(sock); /* ¿¬°á Á¾·á */
+	fclose(recv); // changed 161125
+	close(sock); /* ì—°ê²° ì¢…ë£Œ */
 
 	return 0;
 }
