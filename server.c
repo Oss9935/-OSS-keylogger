@@ -6,8 +6,8 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-#define GET_LOG 100
-#define SEND_LOG 101
+#define GET 100
+#define SEND 101
 #define FAIL_SEND 102
 #define EXIT_CMD 900
 #define EXIT_PROCESS 901
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 	if (listen(server_sock, 5) == -1)  /* 연결 요청 대기 상태로 진입 */
 		error_handling("listen() error");
 
-	for (;;) {
+
 
 		clnt_addr_size = sizeof(clnt_addr);
 		client_sock = accept(server_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size); /* 연결 요청 수락 */
@@ -97,24 +97,17 @@ int main(int argc, char *argv[])
 						split = file;
 						if (strlen(split) == 0)
 							write(client_sock, "EOF", 4);
-						//printf("<%s>\n", file);
+						//printf("<%s>\n", file); 
 						write(client_sock, file, strlen(file) + 1);
 						memset(file, '\0', sizeof(file));
 					}
 				}
-
 				fclose(fp);
 			}
 
 		}
 		close(client_sock);
-
-		
-	}
-
-	//return 0;
-
-
+return 0;
 }
 
 
