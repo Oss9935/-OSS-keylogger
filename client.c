@@ -7,8 +7,8 @@
 #include <sys/socket.h>
 #include <malloc.h>
 
-#define GET_LOG 100
-#define SEND_LOG 101
+#define GET 100
+#define SEND 101
 #define FAIL_SEND 102
 #define EXIT_CMD 900
 #define EXIT_PROCESS 901
@@ -60,9 +60,9 @@ int main(int argc, char *argv[])
 		{
 			recv = fopen("receive file.txt", "w+"); // changed 161125		
 			memset(cmd, '\0', sizeof(cmd));
-			printf("======================\n");
-			printf("Message from server>>\n");
-			printf("======================\n");
+			printf("=======================\n");
+			printf("||Message from server||\n");
+			printf("=======================\n");
 			for (;;) {
 				memset(message, '\0', sizeof(message)); // memory set	
 				str_len = read(sock, message, sizeof(message) - 1); /* 데이터 수신 */
@@ -89,7 +89,6 @@ int main(int argc, char *argv[])
 			break;
 
 	}
-	
 	close(sock); /* 연결 종료 */
 
 	return 0;
