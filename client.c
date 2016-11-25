@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
 			break;
 
 	}
-	fclose(recv); // changed 161125
+	
 	close(sock); /* 연결 종료 */
 
 	return 0;
