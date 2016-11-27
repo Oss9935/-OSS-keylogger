@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	server_sock = socket(PF_INET, SOCK_STREAM, 0); /* 서버 소켓 생성 */
+	server_sock = socket(PF_INET, SOCK_STREAM, 0); /* create server socket */
 	if (server_sock == -1)
 		error_handling("socket() error");
 
@@ -52,17 +52,17 @@ int main(int argc, char *argv[])
 	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serv_addr.sin_port = htons(atoi(argv[1]));
 
-	if (bind(server_sock, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) == -1) /* 소켓에 주소 할당 */
+	if (bind(server_sock, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) == -1) /* assign the address to server */
 		error_handling("bind() error");
 	for(;;)
 	{
-	if (listen(server_sock, 5) == -1)  /* 연결 요청 대기 상태로 진입 */
+	if (listen(server_sock, 5) == -1)  /* enter the status of waiting listen mode */
 		error_handling("listen() error");
 
 
 
 		clnt_addr_size = sizeof(clnt_addr);
-		client_sock = accept(server_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size); /* 연결 요청 수락 */
+		client_sock = accept(server_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size); /* accept connection */
 
 		if (client_sock == -1)
 			error_handling("accept() error");
@@ -98,8 +98,7 @@ int main(int argc, char *argv[])
 						fgets(file, MAX, fp);
 						split = file;
 						if (strlen(split) == 0)
-							write(client_sock, "EOF", 4);
-						//printf("<%s>\n", file); 
+							write(client_sock, "EOF", 4); 
 						write(client_sock, file, strlen(file) + 1);
 						memset(file, '\0', sizeof(file));
 					}

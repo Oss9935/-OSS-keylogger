@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	sock = socket(PF_INET, SOCK_STREAM, 0);  /* 서버 접속을 위한 클라이언트 소켓 생성 */
+	sock = socket(PF_INET, SOCK_STREAM, 0);  /* create the client socket to connet to the server */
 	if (sock == -1)
 		error_handling("socket() error");
 
@@ -45,12 +45,12 @@ int main(int argc, char *argv[])
 	serv_addr.sin_addr.s_addr = inet_addr(argv[1]);
 	serv_addr.sin_port = htons(atoi(argv[2]));
 
-	if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1) /* 서버로 연결 요청 */
+	if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1) /* request the connection to server */
 		error_handling("connect() error!");
 
 	for (;;) // cmd loop
 	{
-		printf("===================");	
+		printf("*****************");	
 		printf("\nInput the CMD>>");
 		scanf("%s", cmd); // input the CMD
 		cmd[strlen(cmd)] = '\0';
@@ -58,20 +58,19 @@ int main(int argc, char *argv[])
 
 		if (strcmp(cmd, "GET") == 0)
 		{
-			recv = fopen("receive file.txt", "w+"); // changed 161125		
+			recv = fopen("receive file.txt", "w+"); // store the file that is from server		
 			memset(cmd, '\0', sizeof(cmd));
-			printf("=======================\n");
-			printf("||Message from server||\n");
-			printf("=======================\n");
+			printf("***********************\n");
+			printf("* Message from server *\n");
+			printf("***********************\n");
 			for (;;) {
 				memset(message, '\0', sizeof(message)); // memory set	
-				str_len = read(sock, message, sizeof(message) - 1); /* 데이터 수신 */
+				str_len = read(sock, message, sizeof(message) - 1); /* receive data */
 
 				if (str_len == -1)
 					error_handling("read() error!"); // manage error
 
 				message[str_len] = '\0';
-				//printf("<%s>", message); // <OK> message
 				if (strcmp(message, "OK") == 0)
 				{
 					write(sock, "SEND", 5);
@@ -80,16 +79,15 @@ int main(int argc, char *argv[])
 					if (strcmp(message, "EOF") == 0)
 						break;
 					printf("%s", message);
-					fwrite(message,strlen(message),1, recv); // changed 161125
-				}
+					fwrite(message,strlen(message),1, recv); 				}
 			}
-			fclose(recv); // changed 161125
+			fclose(recv);
 		}
 		else if (strcmp(cmd, "END") == 0)
 			break;
 
 	}
-	close(sock); /* 연결 종료 */
+	close(sock); /* close the connection */
 
 	return 0;
 }
