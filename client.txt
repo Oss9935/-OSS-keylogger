@@ -7,8 +7,8 @@
 #include <sys/socket.h>
 #include <malloc.h>
 
-#define GET 100
-#define SEND 101
+#define GET_LOG 100
+#define SEND_LOG 101
 #define FAIL_SEND 102
 #define EXIT_CMD 900
 #define EXIT_PROCESS 901
@@ -26,8 +26,6 @@ int main(int argc, char *argv[])
 	char message[MAX];
 	int str_len;
 	int i = 0;
-	FILE *recv; // store the receive file
-	
 
 
 
@@ -36,7 +34,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	sock = socket(PF_INET, SOCK_STREAM, 0);  /* create the client socket to connet to the server */
+	sock = socket(PF_INET, SOCK_STREAM, 0);  /* 서버 접속을 위한 클라이언트 소켓 생성 */
 	if (sock == -1)
 		error_handling("socket() error");
 
@@ -45,12 +43,11 @@ int main(int argc, char *argv[])
 	serv_addr.sin_addr.s_addr = inet_addr(argv[1]);
 	serv_addr.sin_port = htons(atoi(argv[2]));
 
-	if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1) /* request the connection to server */
+	if (connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1) /* 서버로 연결 요청 */
 		error_handling("connect() error!");
 
 	for (;;) // cmd loop
 	{
-		printf("*****************");	
 		printf("\nInput the CMD>>");
 		scanf("%s", cmd); // input the CMD
 		cmd[strlen(cmd)] = '\0';
@@ -58,19 +55,18 @@ int main(int argc, char *argv[])
 
 		if (strcmp(cmd, "GET") == 0)
 		{
-			recv = fopen("receive file.txt", "w+"); // store the file that is from server		
 			memset(cmd, '\0', sizeof(cmd));
-			printf("***********************\n");
-			printf("* Message from server *\n");
-			printf("***********************\n");
+			printf("Message from server>>\n");
+
 			for (;;) {
 				memset(message, '\0', sizeof(message)); // memory set	
-				str_len = read(sock, message, sizeof(message) - 1); /* receive data */
+				str_len = read(sock, message, sizeof(message) - 1); /* 데이터 수신 */
 
 				if (str_len == -1)
 					error_handling("read() error!"); // manage error
 
 				message[str_len] = '\0';
+				printf("<%s>", message);
 				if (strcmp(message, "OK") == 0)
 				{
 					write(sock, "SEND", 5);
@@ -79,15 +75,14 @@ int main(int argc, char *argv[])
 					if (strcmp(message, "EOF") == 0)
 						break;
 					printf("%s", message);
-					fwrite(message,strlen(message),1, recv); 				}
+				}
 			}
-			fclose(recv);
 		}
 		else if (strcmp(cmd, "END") == 0)
 			break;
 
 	}
-	close(sock); /* close the connection */
+	close(sock); /* 연결 종료 */
 
 	return 0;
 }

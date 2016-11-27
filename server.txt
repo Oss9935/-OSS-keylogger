@@ -6,8 +6,8 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-#define GET 100
-#define SEND 101
+#define GET_LOG 100
+#define SEND_LOG 101
 #define FAIL_SEND 102
 #define EXIT_CMD 900
 #define EXIT_PROCESS 901
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	server_sock = socket(PF_INET, SOCK_STREAM, 0); /* create server socket */
+	server_sock = socket(PF_INET, SOCK_STREAM, 0); /* 서버 소켓 생성 */
 	if (server_sock == -1)
 		error_handling("socket() error");
 
@@ -52,26 +52,24 @@ int main(int argc, char *argv[])
 	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serv_addr.sin_port = htons(atoi(argv[1]));
 
-	if (bind(server_sock, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) == -1) /* assign the address to server */
+	if (bind(server_sock, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) == -1) /* 소켓에 주소 할당 */
 		error_handling("bind() error");
-	for(;;)
-	{
-	if (listen(server_sock, 5) == -1)  /* enter the status of waiting listen mode */
+
+	if (listen(server_sock, 5) == -1)  /* 연결 요청 대기 상태로 진입 */
 		error_handling("listen() error");
 
-
+	for (;;) {
 
 		clnt_addr_size = sizeof(clnt_addr);
-		client_sock = accept(server_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size); /* accept connection */
+		client_sock = accept(server_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size); /* 연결 요청 수락 */
 
 		if (client_sock == -1)
 			error_handling("accept() error");
 
-		for (;;) // execute CMD
-		{
+		for (;;) {
 			len = 0;
 			tmp = readmsg;
-			while ((n = read(client_sock, tmp, 1))>0) // Get the CMD
+			while ((n = read(client_sock, tmp, 1))>0) // input by client
 			{
 				if (*tmp == '\r') continue;
 				if (*tmp == '\0') break;
@@ -98,20 +96,25 @@ int main(int argc, char *argv[])
 						fgets(file, MAX, fp);
 						split = file;
 						if (strlen(split) == 0)
-							write(client_sock, "EOF", 4); 
+							write(client_sock, "EOF", 4);
+						printf("<%s>\n", file);
 						write(client_sock, file, strlen(file) + 1);
 						memset(file, '\0', sizeof(file));
 					}
 				}
+
 				fclose(fp);
 			}
-			else if(strcmp(readmsg, "END")==0)
-				break;
 
 		}
 		close(client_sock);
+
+		// close(client_sock); /* 연결 종료 */
 	}
-		//return 0;
+
+	//return 0;
+
+
 }
 
 
