@@ -1,0 +1,37 @@
+(¸µÅ©) : http://phrack.org/issues/59/14.html
+
+                             ==Phrack Inc.==
+
+               Volume 0x0b, Issue 0x3b, Phile #0x0e of 0x12
+
+
+|=-----------------=[ Writing Linux Kernel Keylogger ]=------------------=|
+|=-----------------------------------------------------------------------=|
+|=------------------=[ rd <rd@thehackerschoice.com> ]=-------------------=|
+|=------------------------=[ June 19th, 2002 ]=--------------------------=|
+
+--[ Contents
+
+ 1 - Introduction
+
+ 2 - How Linux keyboard driver work
+
+ 3 - Kernel based keylogger approaches
+   3.1 - Interrupt handler
+   3.2 - Function hijacking
+       3.2.1 - handle_scancode
+       3.2.2 - put_queue
+       3.2.3 - receive_buf
+       3.2.4 - tty_read
+       3.2.5 - sys_read/sys_write
+
+ 4 - vlogger
+   4.1 - The syscall/tty approach
+   4.2 - Features
+   4.3 - How to use
+
+ 5 - Greets
+
+ 6 - References
+
+ 7 - Keylogger source
