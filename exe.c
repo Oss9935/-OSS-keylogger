@@ -112,11 +112,15 @@ void sendLog(char* str, int sendSize, char* servIP, char* port){
 
 	if( connect(sock, (struct sockaddr*)&servAddr, sizeof(servAddr)) == -1 )
 		errorHandling("connect() error");
+	else
+		printf("connection success\n");
+
+
 
 	// non complete
 	while(1){
-
 		read(sock, &option, 1);
+		printf("option : %d\n", option);
 
 		switch (option){
 			case GET_LOG_REQUEST :
