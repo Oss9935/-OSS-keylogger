@@ -1,0 +1,12 @@
+--------------------------------------------------------------
+serv -> client(target)
+
+- 100 : get log
+- 200 : ~~~¹ÌÁ¤
+- 900 : exit process
+--------------------------------------------------------------
+Client -> Serv
+
+- 101 : I will send log file!! : logfile (end with EOF)
+- 102 : I can't read log file!!
+- 901 : exiting process!
