@@ -1,0 +1,3 @@
+http://www.cs.columbia.edu/~mikepo/papers/gpukeylogger.eurosec13.pdf
+
+GPU 기반 키로거도 있는듯하다 신기신기
