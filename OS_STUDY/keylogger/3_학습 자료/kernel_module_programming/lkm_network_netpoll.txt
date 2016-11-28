@@ -9,3 +9,5 @@
 netpoll-linux_kongress-2005
 netpoll.h
 
+(추가 링크) : IP -> hex converter	// 위 깃허브 사용 시 필요
+http://www.miniwebtool.com/ip-address-to-hex-converter/

@@ -1,0 +1,8 @@
+설명 : notifier를 활용한 keylogger 구현 방법 정리 블로그
+- github 소스 존재
+- stealty 기능 구현 => 참고할 필요 있을 듯
+
+
+http://r00tkit.me/?p=115
+
+https://github.com/maK-/stealthy-Keylogger-lkm/
