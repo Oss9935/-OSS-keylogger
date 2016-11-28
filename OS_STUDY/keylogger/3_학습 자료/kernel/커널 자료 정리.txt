@@ -37,3 +37,33 @@ http://pmj0403.tistory.com/entry/%EB%94%94%EB%B0%94%EC%9D%B4%EC%8A%A4-%EB%93%9C%
 2. 윈도우 커널 vs 리눅스 커널
 http://technozed.com/windows-kernel-vs-linux-kernel/
 : 개략적인 설명.
+
+3. Windows Kernel Source Internals
+http://www.hackerschool.org/HS_Boards/data/Lib_kernel/Windows_Kernel_Source_Internals.pdf
+(개요)
+>>> 이 문서는 커널 소스에 대한 한줄 한줄의 설명을 제공 하진 않습니다.
+다만 필요한 부분을 빨리 찾아 보실수 있도록
+각 모듈의 구조와 그가 지원하는 함수목록을 제공 합니다.
+
+
+>>> 이 문서는 Windows Kernel(ntoskrnl.exe)을 구성하는데
+직접적으로 쓰인 모듈만을 다룹니다. 
+(대부분 private/ntos/ 폴더 있습니다.) ntoskrnl.exe의
+export table에 없는 함수더라도 내부적으로 사용하는 모듈도 있기에, 
+이 문서를 통해 처음 들어보는 부분도 있을거라 생각됩니다.
+>>> 이 문서에서는 i386 부분의 코드만을 다룹니다. 
+각 모듈에는 각기 다른 프로세
+서를 지원하기 위해 Hardware-Dependent한 코드가 다수 존재합니다. 
+하지만 여기서는 i386 코드만을 문서화 했습니다.
+다른 시스템에서 작업 하시는 분이라면 이 부분만은 따로 분석 하셔야 합니다. 
+
+
+3. 커널 보안 관련 문서 모음
+
+http://www.hackerschool.org/Sub_Html/HS_Community/includes/Library_list.html?id=Lib_kernel
+
+
+
+
+
+

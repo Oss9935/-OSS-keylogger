@@ -1,0 +1,8 @@
+제목 : [windows] 초보자를 위한 Kernel based windows rootkit
+
+
+- 커널레벨에서 작동하는 루트 킷의 장점 설명되어있음
+- 이 외에도 필요한 내용 많아서 읽어보는게 좋을 듯
+
+
+(링크) : http://www.hackerschool.org/HS_Boards/data/Lib_kernel/beginnerwinrootkit.pdf
