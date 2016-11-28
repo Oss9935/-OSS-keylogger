@@ -1,0 +1,11 @@
+(개요) : Linux에서 후킹을 하는 방법 중
+
+LD_PRELOAD와 공유라이브러리를 사용하는 방법이 있음.
+
+
+
+(링크) : http://agz.es/Reverse-Engineering/Hooking/LD_PRELOAD%5Bbinoopang%5D.pdf
+
+http://opensourceforu.com/2011/08/lets-hook-a-library-function/
+
+http://i5on9i.blogspot.kr/2013/05/hooking-wrapper-function.html

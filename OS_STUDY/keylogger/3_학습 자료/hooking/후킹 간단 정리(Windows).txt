@@ -1,0 +1,30 @@
+# 후킹 : 다른 프로세스의 실행 경로를 가로채는 것!!
+
+
+
+# 후킹의 종류
+- 메시지 후킹
+- API 후킹
+- 네이티브 API 후킹
+- 등등등.. 많다
+
+
+
+# 메시지 후킹
+- SetWindowsHookEx 이
+
+용
+
+# SetWindowsHookEx를 이용한 다양한 형태의 후킹
+- 키보드 입력 모니러링 : WH_KEYBOARD 
+
+- 마우스 이벤트 모니터링 : WH_MOUSE 
+
+- PostMessage로 전달된 내용의 처리 과정 모니터링
+  : WH_CALLWNDPROC, WH_CALLWNDPROCRET 
+
+- 입력 이벤트 저장 재생 : WH_JOURNALERCORD, WH_JOURNALPLAYBACK
+
+- 각종 윈도우 관련 이벤트 통지 : WH_CBT
+
+- 프로세스 모니터링 : WH_DEBUG
