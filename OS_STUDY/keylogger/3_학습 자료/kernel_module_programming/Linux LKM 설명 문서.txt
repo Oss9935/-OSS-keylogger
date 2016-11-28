@@ -1,0 +1,25 @@
+링크 : http://www.ouah.org/LKM_HACKING.html#II.6.1.
+
+제목 : (nearly) Complete Linux Loadable Kernel Modules
+
+-the definitive guide for hackers, virus coders and system administrators-
+
+필요한 내용
+
+1. Basics : LKM 설명, System Call
+
+2. Fun & Profit
+(1) Syscall Intercept
+
+4. 파일시스템 => How to hide file
+
+5. Process => How to hide process
+
+6. lkm (Socktd related) Network
+
+7. TTY 하이재킹 방법
+
+
+
+
+/*	한번 전체적으로 읽어보면 도움될 듯!!	*/
