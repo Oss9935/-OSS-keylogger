@@ -1,0 +1,11 @@
+제목 : 리눅스 커널 모듚 프로그래밍으로 키로거 구현한 깃허브!!
+
+링크 : https://github.com/dangodai/remote-keylogger-lkm/blob/master/keylogger.c
+
+설명 : netpoll을 활용해서 커널 모듈 프로그래밍에서 UDP로 직접 보내주 방법인듯!!
+
+
+관련 추가 자료 : 해당 폴더에 첨부
+netpoll-linux_kongress-2005
+netpoll.h
+
