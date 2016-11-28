@@ -1,0 +1,8 @@
+http://rusy.tistory.com/entry/%EC%9D%B8%ED%84%B0%EB%9F%BD%ED%8A%B8interrupt
+=> 리눅스 커널 인터럽트에 관한 게시글
+
+http://blog.naver.com/PostView.nhn?blogId=tkdldjs35&logNo=220766239437&categoryNo=0&parentCategoryNo=0&viewDate=&currentPage=1&postListTopCurrentPage=1&from=postView
+=> 리눅스 디바이스 관련 인터럽트
+
+
+
